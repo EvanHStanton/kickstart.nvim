@@ -91,12 +91,15 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+
+-- Activate terminal colors
+vim.opt.termguicolors = true
 
 -- Make line numbers default
 vim.opt.number = true
@@ -153,6 +156,12 @@ vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- Keymap Neotree
+vim.keymap.set('n', '<leader>w', ':Neotree action=show source=filesystem position=left toggle=true<CR>', { noremap = true, silent = true })
+
+-- Keymap Terminal
+vim.keymap.set('n', '<leader>t', ':terminal<CR>', { noremap = true, silent = true })
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -720,7 +729,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-moon'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
@@ -803,7 +812,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -831,6 +840,18 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
+})
+
+-- Terminal colors customization
+vim.api.nvim_create_autocmd('TermOpen', {
+  pattern = 'term://*',
+  callback = function()
+    -- Example colors from a "Slate" like palette for the terminal
+    vim.cmd 'highlight TermText guifg=#8a8a8a guibg=#222222'
+    vim.cmd 'highlight TermCursor guifg=#ffffff guibg=#556677'
+    vim.cmd 'highlight TermCursorNC guifg=#ffffff guibg=#334455'
+    vim.cmd 'setlocal winhighlight=Normal:TermText,Cursor:TermCursor,CursorLine:TermCursor,NormalNC:TermText'
+  end,
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
